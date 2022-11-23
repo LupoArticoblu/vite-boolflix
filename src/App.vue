@@ -20,13 +20,31 @@ export default {
     };
   },
   methods: {
-    
+    getApi(type){
+      axios.get(store.apiUrl + type, {params: store.apiParams})
+      .then(res => {
+        if(type === 'movie'){
+          store.movie = res.data.results;
+        }else{
+          store.tv = res.data.results;
+        }
+      })
+      .catch(err =>{})
+    }
+  },
+  mounted(){
+    this.getApi('movie')
+    this.getApi('tv')
   }
   }
 </script>
 
 <template>
-  
+  <div>
+    <Appheader />
+    <Appmain title="Film" type="movie"/>
+    <Appmain  title="Serie TV" type="tv"/>
+  </div>
 </template>
 
 
