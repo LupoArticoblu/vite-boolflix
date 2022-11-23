@@ -20,9 +20,10 @@ export default {
         </div>
 
         <div class="d-flex">
-          <input type="text" class="form-control" placeholder="Cerca un film">
+          <!-- v-model.trim(TRIM RIPULISCE GLI SPAZI VUOTI ALL'INIZIO E ALLA FINE DELLA STRINGA) -->
+          <input @keyup.enter="$emit('search')" v-model.trim="store.apiParams.query" type="text" class="form-control" placeholder="Cerca un film">
 
-          <select v-model="typeToSearch" class="form-select ms-3">
+          <select @change="$emit('search')" v-model="store.typeofsearch" class="form-select ms-3">
             <option value="">all</option>
             <option value="movie">film</option>
             <option value="tv">serie tv</option>
