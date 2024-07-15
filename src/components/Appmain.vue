@@ -10,9 +10,9 @@ export default {
   },
   props:{
     //questo viene riportato in tamplate, qui,  e come parametro comunicherà in App.vue il titolo
-    title: string,
+    title: String,
     //altro parametro da riferire ad App.vue per riconoscere se il risultato della ricerca va nell'array delle serie tv o dei film 
-    type: string,
+    type: String,
   },  
   data() {
     return{
