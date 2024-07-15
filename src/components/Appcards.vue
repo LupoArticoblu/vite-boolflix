@@ -28,11 +28,11 @@ export default {
         </div>
         <div>
           {{rating}}
-          <i 
+          <i
           v-for="(n, index) in 5"
           :key="index"
           class="fa-star"
-          :class="index < rating ? 'fa-solid' : 'fa-regular'"></i>
+          :class="(index < rating) ? 'fa-solid' : 'fa-regular'"></i>
         </div>
         <p class="overview">{{card.overview}}</p>
 

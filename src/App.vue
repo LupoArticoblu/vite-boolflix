@@ -28,7 +28,9 @@ export default {
       }else{
         apiUrl = store.apiUrl + type
       }
-      axios.get(store.apiUrl, { params: store.apiParams })
+      axios.get(store.apiUrl, { 
+        params : store.apiParams  
+      })
         .then(res => {
           if (type === 'movie') {
             store.movie = res.data.results;
