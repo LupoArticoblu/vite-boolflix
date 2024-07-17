@@ -1,4 +1,5 @@
 <script>
+
 export default {
   name: 'Appcards',
   props: {
@@ -7,6 +8,9 @@ export default {
   computed:{
     rating(){
       return Math.ceil(this.card.vote_average/ 2)
+    },
+    formatDate(){
+      return this.card.release_date.split('-').reverse().join('/');
     }
   }  
 }
@@ -27,8 +31,8 @@ export default {
         <h3>{{card.title || card.name}}</h3>
         <h5>{{card.original_title || card.original_name}}</h5>
         <div class="flag">
-          <img :src="`https://flagcdn.com/w20/${card.original_language}.png`" alt="flag">
-           <p> Lingua: {{card.original_language}}</p>
+          <p> Lingua: {{card.original_language}}</p>
+          <p> {{formatDate}}</p>
         </div>
         <div>
           {{rating}}
