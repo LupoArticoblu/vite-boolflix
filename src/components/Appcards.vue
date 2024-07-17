@@ -15,16 +15,19 @@ export default {
 <template>
   <div class="sc-card">
     <div class="inner">
+
       <div class="front">
           <img class="poster"
-           v-if="card.poster_path" :src="`https://image.tmbd.org/t/p/w342${card.poster_path}`" :alt="card.title || card.name">
+           v-if="card.poster_path" :src="`https://image.tmdb.org/t/p/w342/${card.poster_path}`" :alt="card.title || card.name">
           
-          <img class="placeholder" v-else :src="`https://www.diegogiusti.it/uploads/2020/06/placeholder.png`" :alt="card.title || card.name"> 
+          <img class="placeholder" v-else src="https://i0.wp.com/sunrisedaycamp.org/wp-content/uploads/2020/10/placeholder.png" :alt="card.title || card.name"> 
       </div>
+
       <div class="back">
         <h3>{{card.title || card.name}}</h3>
         <h5>{{card.original_title || card.original_name}}</h5>
-        <div>
+        <div class="flag">
+          <img :src="`https://flagcdn.com/w20/${card.original_language}.png`" alt="flag">
            <p> Lingua: {{card.original_language}}</p>
         </div>
         <div>
@@ -36,7 +39,6 @@ export default {
           :class="(index < rating) ? 'fa-solid' : 'fa-regular'"></i>
         </div>
         <p class="overview">{{card.overview}}</p>
-
       </div>
 
     </div>
@@ -45,17 +47,18 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-.sc-cart{
+.sc-card{
   width: 300px;
   height: 450px;
+  padding: 10px;
   .inner{
     position: relative;
     background-color: black;
     height: 100%;
     overflow: hidden;
     &:hover{
-      img .poster,
-      img .placeholder{
+      img.poster,
+      img.placeholder{
         transform: scale(1.1);
         opacity: .3;
       }
@@ -64,18 +67,17 @@ export default {
       }
     }
     .front{
-      height: 100%;
       h3{
         padding: 15px;
         text-align: center;
       }
-      img .poster{
+      img.poster{
         width: 100%;
         height: 100%;
-        object-fit: cover;
         transition: all .5s;
+        object-fit: cover;
       }
-      img .placeholder{
+      img.placeholder{
         width: 100%;
         transition: all .5s;
       }
