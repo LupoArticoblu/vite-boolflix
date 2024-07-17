@@ -6,7 +6,7 @@ export default {
   },
   computed:{
     rating(){
-      return Mat.ceil(this.card.vote_average/ 2)
+      return Math.ceil(this.card.vote_average/ 2)
     }
   }  
 }
@@ -17,7 +17,8 @@ export default {
     <div class="inner">
       <div class="front">
           <img class="poster"
-           v-if="card.poster_path" :src="`https://image.tmbd.org/t/p/w342/${card.poster_path}`" :alt="card.title || card.name">
+           v-if="card.poster_path" :src="`https://image.tmbd.org/t/p/w342${card.poster_path}`" :alt="card.title || card.name">
+          
           <img class="placeholder" v-else :src="`https://www.diegogiusti.it/uploads/2020/06/placeholder.png`" :alt="card.title || card.name"> 
       </div>
       <div class="back">

@@ -22,23 +22,23 @@ export default {
   },
   methods: {
     getApi(type, isPopular = false) {
+      console.log(store.apiUrl, store.apiParams);
       let apiUrl;
-      if (isPopular){ 
-        apiUrl = 'https://api.themoviedb.org/3/search/'
-      }else{
-        apiUrl = store.apiUrl + type
+      if (isPopular) {
+        apiUrl = `https://api.themoviedb.org/3/${type}/popular`;
+      } else {
+        apiUrl = store.apiUrl + type;
       }
-      axios.get(store.apiUrl, { 
+      axios.get(apiUrl, { 
         params : store.apiParams  
       })
         .then(res => {
-          if (type === 'movie') {
-            store.movie = res.data.results;
-          } else {
-            store.tv = res.data.results;
-          }
+          console.log(res.data.results);
+          store[type] = res.data.results
         })
-        .catch(err => {})
+        .catch(err => {
+          console.log('error!', err);
+        })
     },
     startSearch() {
       store.movie = [];
@@ -53,6 +53,7 @@ export default {
   },
   mounted() {
     this.getApi('movie', true);
+    this.getApi('tv', true);
   }
 }
 </script>
@@ -67,5 +68,6 @@ export default {
 
 
 <style lang="scss">
-  @use './style/general.scss';
+  @use './style/general.scss' as *;
+  @use './style/vars.scss' as *;
 </style>
