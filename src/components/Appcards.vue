@@ -2,6 +2,18 @@
 
 export default {
   name: 'Appcards',
+  // nei data inserisco la lingua originale e ci assegno l'immagine corrispondente a quella lingua, che si trova in public
+  data(){
+    return{
+      flags:{
+        en: 'gb',
+        it: 'it',
+        fr: 'fr',
+        es: 'es',
+        ja: 'jp',
+      }
+    }
+  },
   props: {
     card: Object
   },
@@ -31,11 +43,11 @@ export default {
         <h3>{{card.title || card.name}}</h3>
         <h5>{{card.original_title || card.original_name}}</h5>
         <div class="flag">
-          <p> Lingua: {{card.original_language}}</p>
+          <img v-if="flags[card.original_language]" :src="flags[card.original_language] + '.svg' " >
+          <p v-else> Lingua: {{card.original_language}}</p>
           <p> {{formatDate}}</p>
         </div>
         <div>
-          {{rating}}
           <i
           v-for="(n, index) in 5"
           :key="index"
@@ -95,6 +107,10 @@ export default {
       padding: 10px;
       height: 100%;
       transition: all .5s;
+      img{
+          width: 30px;
+          height: 20px;
+        }
       .overview{
         overflow: auto;
       }
