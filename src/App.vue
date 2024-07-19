@@ -43,12 +43,16 @@ export default {
     startSearch() {
       store.movie = [];
       store.tv = [];
+      //se type è vuoto getApi sia di movie che di tv
       if (store.type === '') {
         this.getApi('movie')
         this.getApi('tv')
+      //altrimenti getApi solo il type selezionato
       } else {
         this.getApi(store.type)
-      }
+      } 
+        
+      
     }
   },
   mounted() {
