@@ -22,7 +22,8 @@ export default {
       return Math.ceil(this.card.vote_average/ 2)
     },
     formatDate(){
-      return this.card.release_date.split('-').reverse().join('/');
+      const date = this.card.release_date || this.card.first_air_date;
+      return date ? date.split('-').reverse().join('/') : 'Data non disponibile';
     }
   }  
 }
