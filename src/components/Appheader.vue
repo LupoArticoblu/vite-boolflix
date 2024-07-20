@@ -23,10 +23,10 @@ export default {
           <!-- v-model.trim(TRIM RIPULISCE GLI SPAZI VUOTI ALL'INIZIO E ALLA FINE DELLA STRINGA) -->
           <input @keyup.enter="$emit('search')" v-model.trim="store.apiParams.query" type="text" class="form-control" placeholder="Cerca un film">
 
-          <select @change="$emit('search')" v-model="store.typeofsearch" class="form-select ms-3">
-            <option value="" selected>all</option>
-            <option value="movie">film</option>
-            <option value="tv">serie tv</option>
+          <select @change="$emit('search')" v-model="store.type" class="form-select ms-3">
+            <option value="all" selected>Tutti</option>
+            <option value="movie">Film</option>
+            <option value="tv">Serie tv</option>
           </select>
         </div>
       </div>

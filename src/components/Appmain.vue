@@ -12,7 +12,7 @@ export default {
     //questo viene riportato in tamplate, qui,  e come parametro comunicherà in App.vue il titolo
     title: String,
     //altro parametro da riferire ad App.vue per riconoscere se il risultato della ricerca va nell'array delle serie tv o dei film 
-    type: String,
+    cards: Array,
   },  
   data() {
     return{
@@ -30,7 +30,7 @@ export default {
 
   <div class="container d-flex flex-wrap">
     
-    <Appcards :card="card" v-for="card in store[type]" :key="card.id"/>
+    <Appcards :card="card" v-for="card in cards" :key="card.id"/>
     
   </div>
 

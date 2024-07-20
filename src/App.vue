@@ -3,7 +3,7 @@
 
 import Appheader from './components/Appheader.vue';
 import Appmain from './components/Appmain.vue';
-import Appcards from './components/Appcards.vue';
+
 import axios from "axios";
 import { store } from './data/store.js';
 
@@ -12,7 +12,6 @@ export default {
   components: {
     Appheader,
     Appmain,
-    Appcards
 
   },
   data() {
@@ -23,50 +22,59 @@ export default {
   methods: {
     getApi(type, isPopular = false) {
       console.log(store.apiUrl, store.apiParams);
-      let apiUrl;
-      if (isPopular) {
-        apiUrl = `https://api.themoviedb.org/3/${type}/popular`;
-      } else {
-        apiUrl = store.apiUrl + type;
-      }
-      axios.get(apiUrl, { 
+      let apiUrl = isPopular ? `https://api.themoviedb.org/3/${type}/popular` : `${store.apiUrl}${type}`;
+
+      return axios.get(apiUrl, { 
         params : store.apiParams  
       })
         .then(res => {
-          console.log(res.data.results);
-          store[type] = res.data.results
+          console.log(res.data.results); 
+          return res.data.results
         })
         .catch(err => {
           console.log('error!', err);
+          return []; //array vuoto in cASO di errore
         })
     },
     startSearch() {
-      store.movie = [];
-      store.tv = [];
-      //se type è vuoto getApi sia di movie che di tv
-      if (store.type === '') {
-        this.getApi('movie')
-        this.getApi('tv')
-      //altrimenti getApi solo il type selezionato
-      } else {
-        this.getApi(store.type)
-      } 
-        
-      
+      console.log('API Params:', store.apiParams);
+      console.log('Query:', store.apiParams.query);  
+    // Assicurati che store.apiParams e store.apiParams.query siano definiti
+    if (!store.apiParams || typeof store.apiParams.query === 'undefined') {
+      console.error('store.apiParams or store.apiParams.query is undefined');
+      return;
     }
+
+    store.movie = [];
+    store.tv = [];
+    
+    const moviePromise = (store.type === 'all' || store.type === 'movie')
+      ? this.getApi('movie', store.apiParams.query === '')
+      : Promise.resolve([]);
+
+    const tvPromise = (store.type === 'all' || store.type === 'tv')
+      ? this.getApi('tv', store.apiParams.query === '')
+      : Promise.resolve([]);
+
+    Promise.all([moviePromise, tvPromise]).then(([movies, tvShows]) => {
+      store.movie = movies;
+      store.tv = tvShows;
+    }).catch(error => {
+      console.error('Error fetching data', error);
+    });
+  }
   },
   mounted() {
-    this.getApi('movie', true);
-    this.getApi('tv', true);
+    this.startSearch();
   }
 }
 </script>
 
 <template>
   <div>
-    <Appheader @search="startSearch()" />
-    <Appmain v-if="store.movie.length > 0" title="Film" type="movie" />
-    <Appmain v-if="store.tv.length > 0" title="Serie TV" type="tv" />
+    <Appheader @search="startSearch" />
+    <Appmain v-if="store.type === 'all' || store.type === 'movie'" title="Film" :cards="store.movie" />
+    <Appmain v-if="store.type === 'all' || store.type === 'tv'" title="Serie TV" :cards="store.tv" />
   </div>
 </template>
 
@@ -74,4 +82,7 @@ export default {
 <style lang="scss">
   @use './style/general.scss' as *;
   @use './style/vars.scss' as *;
+  *{
+    cursor: default;
+  }
 </style>
