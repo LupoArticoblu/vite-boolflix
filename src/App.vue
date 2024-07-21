@@ -20,7 +20,7 @@ export default {
     };
   },
   methods: {
-    getApi(type, isPopular = false) {
+    getApi(type, isPopular = false, page = 1) {
       console.log(store.apiUrl, store.apiParams);
       let apiUrl = isPopular ? `https://api.themoviedb.org/3/${type}/popular` : `${store.apiUrl}${type}`;
 
@@ -45,6 +45,12 @@ export default {
         })
     },
     changePage(newPage) {
+      // se al cambio della pagina store.apiParams.query è diversa dalla precedente, resetto la pagina a 1
+      if (store.apiParams.query !== store.lastQuery) {
+        store.apiParams.page = 1;
+        store.lastQuery = store.apiParams.query; // aggiorno lastQuery con la query corrente
+      }
+      console.log('newPage', newPage);
       if (newPage < 1 || newPage >  (store.type === 'movie' ? store.totPagesMovie : store.totPagesTv)) {
         return; // se la pagina è fuori dal range, non cambio pagina
       }
@@ -52,6 +58,13 @@ export default {
       this.startSearch(); // ricarica i dati per la nuova pagina
     },
     startSearch() {
+      // Resetto la pagina a 1 se la query cambia
+    if (store.apiParams.query !== store.lastQuery) {
+      store.apiParams.page = 1;
+      store.lastQuery = store.apiParams.query;
+    }
+
+       // resetta la pagina a 1 ogni volta che c'è una nuova ricerca
       console.log('API Params:', store.apiParams);
       console.log('Query:', store.apiParams.query);  
     // Assicurati che store.apiParams e store.apiParams.query siano definiti
@@ -62,7 +75,8 @@ export default {
 
     store.movie = [];
     store.tv = [];
-    
+    store.lastQuery = store.apiParams.query;
+
     const moviePromise = (store.type === 'all' || store.type === 'movie')
       ? this.getApi('movie', store.apiParams.query === '')
       : Promise.resolve([]);
@@ -93,16 +107,18 @@ export default {
     <Appmain v-if="store.type === 'tv'" title="Serie TV" :cards="store.tv" />
 
     <!-- Controlli di Paginazione -->
-    <div v-if="store.type === 'movie'" class="pagination-controls">
-      <button @click="changePage(store.apiParams.page - 1)" :disabled="store.apiParams.page <= 1">‹‹</button>
-      <span>Pagina {{ store.apiParams.page }} di {{ store.totalPagesMovie }}</span>
-      <button @click="changePage(store.apiParams.page + 1)" :disabled="store.apiParams.page >= store.totalPagesMovie">››</button>
-    </div>
+    <div v-if="store.apiParams.query !== ''" class="pagination">
+      <div v-if="store.type === 'movie'" class="pagination-controls">
+        <button @click="changePage(store.apiParams.page - 1)" :disabled="store.apiParams.page <= 1">‹‹</button>
+        <span>Pagina {{ store.apiParams.page }} di {{ store.totPagesMovie }}</span>
+        <button @click="changePage(store.apiParams.page + 1)" :disabled="store.apiParams.page >= store.totPagesMovie">››</button>
+      </div>
 
-    <div v-if="store.type === 'tv'" class="pagination-controls">
-      <button @click="changePage(store.apiParams.page - 1)" :disabled="store.apiParams.page <= 1">‹‹</button>
-      <span>Pagina {{ store.apiParams.page }} di {{ store.totalPagesTv }}</span>
-      <button @click="changePage(store.apiParams.page + 1)" :disabled="store.apiParams.page >= store.totalPagesTv">››</button>
+      <div v-if="store.type === 'tv'" class="pagination-controls">
+        <button @click="changePage(store.apiParams.page - 1)" :disabled="store.apiParams.page <= 1">‹‹</button>
+        <span>Pagina {{ store.apiParams.page }} di {{ store.totPagesTv }}</span>
+        <button @click="changePage(store.apiParams.page + 1)" :disabled="store.apiParams.page >= store.totPagesTv">››</button>
+      </div>
     </div>
   </div>
   
@@ -115,7 +131,7 @@ export default {
   *{
     cursor: default;
   }
-  .pagination-controls {
+  .pagination {
     display: flex;
     justify-content: center;
     align-items: center;
