@@ -21,7 +21,7 @@ export default {
 
         <div class="insert d-flex">
           <!-- v-model.trim(TRIM RIPULISCE GLI SPAZI VUOTI ALL'INIZIO E ALLA FINE DELLA STRINGA) -->
-          <input @keyup.enter="$emit('search')" v-model.trim="store.apiParams.query" type="text" class="form-control" placeholder="Cerca un film">
+          <input ref="searchInput" @keyup.enter="$emit('search')" v-model.trim="store.apiParams.query" type="text" class="form-control" placeholder="Cerca un film">
 
           <select @change="$emit('search')" v-model="store.type" class="form-select ms-3">
             <option value="all" selected>Tutti</option>

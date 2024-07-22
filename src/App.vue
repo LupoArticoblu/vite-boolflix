@@ -49,50 +49,53 @@ export default {
       if (store.apiParams.query !== store.lastQuery) {
         store.apiParams.page = 1;
         store.lastQuery = store.apiParams.query; // aggiorno lastQuery con la query corrente
-      }
-      console.log('newPage', newPage);
-      if (newPage < 1 || newPage >  (store.type === 'movie' ? store.totPagesMovie : store.totPagesTv)) {
-        return; // se la pagina è fuori dal range, non cambio pagina
-      }
+        console.log('newPage', newPage);
+      }else{
+        if (newPage < 1 || newPage >  (store.type === 'movie' ? store.totPagesMovie : store.totPagesTv)) {
+          return; // se la pagina è fuori dal range, non cambio pagina
+        }
       store.apiParams.page = newPage; // se non ho errori, cambio pagina
-      this.startSearch(); // ricarica i dati per la nuova pagina
-    },
-    startSearch() {
-      // Resetto la pagina a 1 se la query cambia
-    if (store.apiParams.query !== store.lastQuery) {
-      store.apiParams.page = 1;
-      store.lastQuery = store.apiParams.query;
     }
-
-       // resetta la pagina a 1 ogni volta che c'è una nuova ricerca
+    this.startSearch(); // ricarica i dati per la nuova pagina
+  },
+    startSearch() {
+      
       console.log('API Params:', store.apiParams);
       console.log('Query:', store.apiParams.query);  
-    // Assicurati che store.apiParams e store.apiParams.query siano definiti
-    if (!store.apiParams || typeof store.apiParams.query === 'undefined') {
-      console.error('store.apiParams or store.apiParams.query is undefined');
-      return;
+      // Non svuotare la query se è già impostata
+      
+      this.$nextTick(() => {
+    const inputElement = document.querySelector('input'); // Seleziona il campo di input
+    if (inputElement) {
+      inputElement.value = ''; // Svuota solo il campo di input visivamente
     }
-
-    store.movie = [];
-    store.tv = [];
-    store.lastQuery = store.apiParams.query;
-
-    const moviePromise = (store.type === 'all' || store.type === 'movie')
+  });
+      // Assicurati che store.apiParams e store.apiParams.query siano definiti
+      if (!store.apiParams || typeof store.apiParams.query === 'undefined') {
+        console.error('store.apiParams or store.apiParams.query is undefined');
+        return;
+      }
+      store.movie = [];
+      store.tv = [];
+      store.lastQuery = store.apiParams.query;
+      
+      const moviePromise = (store.type === 'all' || store.type === 'movie')
       ? this.getApi('movie', store.apiParams.query === '')
       : Promise.resolve([]);
-
-    const tvPromise = (store.type === 'all' || store.type === 'tv')
+      
+      const tvPromise = (store.type === 'all' || store.type === 'tv')
       ? this.getApi('tv', store.apiParams.query === '')
       : Promise.resolve([]);
-
-    Promise.all([moviePromise, tvPromise]).then(([movies, tvShows]) => {
-      store.movie = movies;
-      store.tv = tvShows;
+      
+      Promise.all([moviePromise, tvPromise]).then(([movies, tvShows]) => {
+        store.movie = movies;
+        store.tv = tvShows;
+        
     }).catch(error => {
       console.error('Error fetching data', error);
-    });
+    });  
   }
-  },
+},  
   mounted() {
     this.startSearch();
   }
@@ -107,7 +110,7 @@ export default {
     <Appmain v-if="store.type === 'tv'" title="Serie TV" :cards="store.tv" />
 
     <!-- Controlli di Paginazione -->
-    <div v-if="store.apiParams.query !== ''" class="pagination">
+    <div v-if="store.movie.length > 0 || store.tv.length > 0" class="pagination">
       <div v-if="store.type === 'movie'" class="pagination-controls">
         <button @click="changePage(store.apiParams.page - 1)" :disabled="store.apiParams.page <= 1">‹‹</button>
         <span>Pagina {{ store.apiParams.page }} di {{ store.totPagesMovie }}</span>
@@ -121,7 +124,6 @@ export default {
       </div>
     </div>
   </div>
-  
 </template>
 
 
