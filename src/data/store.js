@@ -14,4 +14,5 @@ export const store = reactive({
   totPagesMovie: 1,
   totPagesTv: 1,
   lastQuery: '',
+  isLoading: false
 });

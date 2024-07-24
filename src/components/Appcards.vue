@@ -1,10 +1,11 @@
 <script>
-
+import { store } from '../data/store.js';
 export default {
   name: 'Appcards',
   // nei data inserisco la lingua originale e ci assegno l'immagine corrispondente a quella lingua, che si trova in public
   data(){
     return{
+      store,
       flags:{
         en: 'gb',
         it: 'it',
@@ -57,8 +58,8 @@ export default {
         </div>
         <p class="overview">{{card.overview}}</p>
       </div>
-
     </div>
+    
   </div>
 
 </template>
