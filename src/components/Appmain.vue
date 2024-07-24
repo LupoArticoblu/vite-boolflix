@@ -18,7 +18,16 @@ export default {
     return{
       store,
     };
-  } 
+  },
+  computed: {
+    outputWrongQuery(){
+      if (this.cards.length > 0) {
+        return '';
+      }else{
+        return 'La ricerca non ha prodotto alcun risultato';
+      }  
+    } 
+  }
 };
 </script>
 
@@ -31,7 +40,7 @@ export default {
   <div class="container d-flex flex-wrap">
     
     <Appcards :card="card" v-for="card in cards" :key="card.id"/>
-    
+    <p>{{ outputWrongQuery }}</p>
   </div>
 
 </template>

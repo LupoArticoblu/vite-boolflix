@@ -65,16 +65,12 @@ export default {
       // Non svuotare la query se è già impostata
       
       this.$nextTick(() => {
-    const inputElement = document.querySelector('input'); // Seleziona il campo di input
-    if (inputElement) {
-      inputElement.value = ''; // Svuota solo il campo di input visivamente
-    }
-  });
-      // Assicurati che store.apiParams e store.apiParams.query siano definiti
-      if (!store.apiParams || typeof store.apiParams.query === 'undefined') {
-        console.error('store.apiParams or store.apiParams.query is undefined');
-        return;
-      }
+        const inputElement = document.querySelector('input'); // Seleziona il campo di input
+        if (inputElement) {
+          inputElement.value = ''; // Svuota solo il campo di input visivamente
+        }
+      });
+      
       store.movie = [];
       store.tv = [];
       store.lastQuery = store.apiParams.query;
